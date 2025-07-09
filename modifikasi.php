@@ -212,6 +212,16 @@
                             <i class="bi bi-pencil-square me-1"></i>Modifikasi Pesanan
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">
+                            <i class="bi bi-pencil-square me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">
+                            <i class="bi bi-pencil-square me-1"></i>Sign In
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
