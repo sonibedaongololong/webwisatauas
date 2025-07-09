@@ -14,16 +14,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $service_makanan = isset($_POST['service_makanan']) ? 1 : 0;
     
     $jumlah_peserta = (int)$_POST['jumlah_peserta'];
-    $harga_paket = (int)$_POST['harga_paket']; // Sudah dalam bentuk angka dari hidden input
-    $total_tagihan = (int)$_POST['total_tagihan']; // Sudah dalam bentuk angka dari hidden input
+    $harga_paket = (int)$_POST['harga_paket'];
+    $total_tagihan = (int)$_POST['total_tagihan'];
 
-    // Validasi data
+    // Validasi dasar
     if (empty($nama_pemesan) || empty($phone) || empty($tanggal_pesan) || empty($waktu_pelaksanaan) || $jumlah_peserta <= 0) {
         die("Error: Semua field wajib diisi dengan benar!");
     }
 
-    // Prepared statement untuk keamanan
-    $sql = "INSERT INTO pemesanan (nama_pemesan, phone, tanggal_pesan, waktu_pelaksanaan, akomodasi, transportasi, service_makanan, jumlah_peserta, harga_paket, total_tagihan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // ========================================
+    // Cek apakah tanggal_pesan sudah dipesan oleh orang lain
+    $checkQuery = "SELECT COUNT(*) as jumlah FROM pemesanan WHERE tanggal_pesan = ?";
+    $stmtCheck = $conn->prepare($checkQuery);
+
+    if ($stmtCheck) {
+        $stmtCheck->bind_param("s", $tanggal_pesan);
+        $stmtCheck->execute();
+        $result = $stmtCheck->get_result();
+        $row = $result->fetch_assoc();
+
+        if ($row['jumlah'] > 0) {
+            echo "<script>alert('Tanggal tersebut sudah dipesan. Silakan pilih tanggal lain.'); window.location.href='homepage.php';</script>";
+            exit();
+        }
+
+        $stmtCheck->close();
+    } else {
+        die("Query Error (pengecekan tanggal): " . $conn->error);
+    }
+    // ========================================
+
+    // Prepared statement untuk penyimpanan data
+    $sql = "INSERT INTO pemesanan (nama_pemesan, phone, tanggal_pesan, waktu_pelaksanaan, akomodasi, transportasi, service_makanan, jumlah_peserta, harga_paket, total_tagihan) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $conn->prepare($sql);
     
@@ -31,21 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("ssssiiiidd", $nama_pemesan, $phone, $tanggal_pesan, $waktu_pelaksanaan, $akomodasi, $transportasi, $service_makanan, $jumlah_peserta, $harga_paket, $total_tagihan);
         
         if ($stmt->execute()) {
-            // Redirect dengan pesan sukses
             header("Location: modifikasi.php?success=1");
             exit();
         } else {
             echo "Error saat menyimpan data: " . $stmt->error;
         }
-        
+
         $stmt->close();
     } else {
         echo "Error preparing statement: " . $conn->error;
     }
-    
+
     $conn->close();
 } else {
-    // Jika bukan POST request, redirect ke homepage
     header("Location: homepage.php");
     exit();
 }
