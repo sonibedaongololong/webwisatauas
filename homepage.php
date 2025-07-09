@@ -246,14 +246,14 @@
                                 </p>
                                 <button class="btn btn-primary" onclick="showModal()">
                                     <i class="bi bi-cart-plus me-1"></i>Pesan Sekarang
-                                </button>
+                                </button>                                                                                                                                                                      
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="card h-100">
-                            <img src="https://cdn.idntimes.com/content-images/post/20170717/komodo3-d83292ce882c318acd3969d2b6b9769d.jpg" 
+                            <img src="https://cdn.idntimes.com/content-images/post/20170717/komodo3-d83292ce882c318acd3969d2b6b9769d.jpg                                                                                                                                                                                                                                                                                                 " 
                                  class="card-img-top" alt="Pulau Komodo">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title text-primary">Pulau Komodo</h5>
