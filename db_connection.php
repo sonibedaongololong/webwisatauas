@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "new_password";
+$password = "";
 $dbname = "wisata1_db";
 
 // Create connection
